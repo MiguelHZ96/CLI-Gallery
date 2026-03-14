@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JMiguelHz · Session 01</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <!-- JetBrains Mono con Nerd Font icons -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap">
   <link rel="stylesheet" href="https://unpkg.com/asciinema-player@3.8.0/dist/bundle/asciinema-player.css">
   <style>
+    /* ── Nerd Font para iconos del terminal ── */
+    @font-face {
+      font-family: 'JetBrainsMono NF';
+      src: url('https://github.com/ryanoasis/nerd-fonts/raw/master/patched-fonts/JetBrainsMono/Ligatures/Regular/JetBrainsMonoNerdFont-Regular.ttf') format('truetype');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     :root {
       --bg-void:      #000000;
       --purple-abyss: #2D0A31;
@@ -150,11 +156,18 @@
     });
 
     // ── PLAYER ──
-    // Cambia la URL por la ruta raw de tu .cast en GitHub:
     AsciinemaPlayer.create(
       'https://raw.githubusercontent.com/MiguelHZ96/CLI-Gallery/main/demo1.cast',
       document.getElementById('player'),
-      { theme: 'monokai', speed: 1, fit: 'width', terminalFontSize: 'medium' }
+      {
+        theme: 'monokai',
+        speed: 1,
+        fit: 'width',
+        cols: 220,
+        rows: 50,
+        terminalFontSize: 'medium',
+        terminalFontFamily: "'JetBrainsMono NF', 'JetBrains Mono', monospace"
+      }
     );
   </script>
 </body>
