@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JMiguelHz · Session 01</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/asciinema-player@3.8.0/dist/bundle/asciinema-player.css">
+  <style>
+    :root {
+      --bg-void:      #000000;
+      --purple-abyss: #2D0A31;
+      --purple-dark:  #4A0E4E;
+      --purple-mid:   #6B21A8;
+      --purple-core:  #9333EA;
+      --purple-vivid: #A855F7;
+      --glow-soft:    #B026FF;
+      --glow-bright:  #D946EF;
+      --border-dim:   #4A4A4A;
+      --border-mid:   #6B6B6B;
+      --text-main:    #E5E5E5;
+      --text-white:   #FFFFFF;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    body{background:var(--bg-void);color:var(--text-main);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;cursor:none}
+    .cursor{position:fixed;width:10px;height:10px;background:var(--glow-bright);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--glow-bright),0 0 25px var(--glow-soft)}
+    .cursor-trail{position:fixed;width:28px;height:28px;border:1px solid var(--purple-core);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.45;transition:all .15s ease}
+    body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(147,51,234,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(147,51,234,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(176,38,255,.12);animation:scan 10s linear infinite;pointer-events:none;z-index:5}
+    @keyframes scan{0%{top:-2px}100%{top:100vh}}
+
+    /* ── NAV ── */
+    nav{position:relative;z-index:10;padding:18px 30px;border-bottom:1px solid rgba(74,14,78,.4);display:flex;align-items:center;gap:16px;background:rgba(0,0,0,.6);backdrop-filter:blur(6px)}
+    .back-btn{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--purple-vivid);letter-spacing:3px;text-decoration:none;text-transform:uppercase;transition:color .2s,text-shadow .2s;display:flex;align-items:center;gap:8px}
+    .back-btn:hover{color:var(--glow-bright);text-shadow:0 0 10px var(--glow-bright)}
+    .nav-sep{color:var(--border-dim);font-family:'Share Tech Mono',monospace}
+    .nav-current{font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--border-dim);letter-spacing:2px}
+
+    /* ── HEADER ── */
+    header{position:relative;z-index:10;padding:50px 30px 40px;background:linear-gradient(180deg,#2D0A31 0%,#0A0A0A 100%);overflow:hidden}
+    header::before{content:'';position:absolute;top:-60px;left:0;right:0;height:300px;background:radial-gradient(ellipse at 30% 50%,rgba(176,38,255,.18) 0%,transparent 70%);pointer-events:none}
+    .session-num{font-family:'Orbitron',sans-serif;font-size:.7rem;color:var(--purple-core);letter-spacing:4px;margin-bottom:12px;opacity:0;animation:fadeUp .6s .1s forwards}
+    h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(1.8rem,4vw,3rem);color:var(--text-white);text-shadow:0 0 20px rgba(176,38,255,.3);opacity:0;animation:fadeUp .6s .25s forwards}
+    h1 span{color:var(--glow-bright)}
+    .meta{margin-top:14px;display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp .6s .4s forwards}
+    .meta-tag{font-family:'Share Tech Mono',monospace;font-size:.7rem;color:var(--glow-bright);border:1px solid rgba(217,70,239,.3);padding:4px 12px;border-radius:2px;background:rgba(217,70,239,.05)}
+    .header-line{margin-top:28px;height:1px;background:linear-gradient(90deg,var(--purple-core),transparent);opacity:0;animation:fadeUp .6s .55s forwards}
+
+    /* ── MAIN ── */
+    main{position:relative;z-index:10;max-width:960px;margin:0 auto;padding:50px 20px 100px}
+
+    /* player wrapper */
+    .player-wrap{background:linear-gradient(135deg,#1A1A1A,#2D0A31);border:1px solid var(--purple-dark);border-radius:4px;overflow:hidden;position:relative;opacity:0;animation:fadeUp .7s .3s forwards;transition:box-shadow .3s}
+    .player-wrap:hover{box-shadow:0 0 40px rgba(147,51,234,.2),0 0 80px rgba(176,38,255,.08)}
+    .player-wrap::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple-core),var(--glow-bright),transparent)}
+
+    .terminal-bar{padding:14px 18px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(74,14,78,.4)}
+    .t-dots{display:flex;gap:7px}
+    .t-dots span{width:10px;height:10px;border-radius:50%}
+    .dot-r{background:#FF5F57}.dot-y{background:#FFBD2E}.dot-g{background:#28CA41}
+    .t-title{margin-left:auto;margin-right:auto;font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--border-mid);letter-spacing:2px}
+
+    #player{padding:0}
+
+    /* ── DESCRIPCIÓN ── */
+    .desc-block{margin-top:36px;padding:24px;background:linear-gradient(135deg,#1A1A1A,#2D0A31);border:1px solid var(--purple-dark);border-radius:4px;opacity:0;animation:fadeUp .7s .5s forwards}
+    .desc-label{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--purple-core);letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
+    .desc-text{font-family:'Share Tech Mono',monospace;font-size:.85rem;color:var(--border-mid);line-height:1.8}
+    .desc-text .cmd{color:var(--purple-vivid)}
+
+    /* nav entre sesiones */
+    .session-nav{margin-top:40px;display:flex;justify-content:space-between;gap:16px;opacity:0;animation:fadeUp .7s .65s forwards}
+    .nav-btn{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:2px;text-decoration:none;padding:12px 20px;border:1px solid var(--purple-dark);border-radius:3px;color:var(--border-mid);transition:all .3s;background:rgba(74,14,78,.1)}
+    .nav-btn:hover{border-color:var(--purple-core);color:var(--purple-vivid);background:rgba(147,51,234,.1);box-shadow:0 0 20px rgba(147,51,234,.15)}
+    .nav-btn.next{margin-left:auto}
+
+    footer{position:relative;z-index:10;text-align:center;padding:28px 20px;border-top:1px solid rgba(74,14,78,.35);font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--border-dim);letter-spacing:3px}
+    footer span{color:var(--purple-core)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-trail" id="cursorTrail"></div>
+  <div class="scanline"></div>
+
+  <!-- NAV -->
+  <nav>
+    <a class="back-btn" href="index.html">← volver</a>
+    <span class="nav-sep">/</span>
+    <span class="nav-current">session_01</span>
+  </nav>
+
+  <!-- HEADER -->
+  <header>
+    <p class="session-num">SESSION · 01 of 02</p>
+    <h1>Configuración <span>inicial</span></h1>
+    <div class="meta">
+      <span class="meta-tag">apt</span>
+      <span class="meta-tag">sudo</span>
+      <span class="meta-tag">ssh</span>
+      <span class="meta-tag">ubuntu</span>
+    </div>
+    <div class="header-line"></div>
+  </header>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- PLAYER -->
+    <div class="player-wrap">
+      <div class="terminal-bar">
+        <div class="t-dots"><span class="dot-r"></span><span class="dot-y"></span><span class="dot-g"></span></div>
+        <span class="t-title">jmiguelhz@server ~ session_01.cast</span>
+      </div>
+      <div id="player"></div>
+    </div>
+
+    <!-- DESCRIPCIÓN -->
+    <div class="desc-block">
+      <p class="desc-label">// notas de la sesión</p>
+      <p class="desc-text">
+        En esta sesión se muestra el proceso de <span class="cmd">configuración inicial</span> del servidor.<br>
+        Se ejecutan actualizaciones con <span class="cmd">apt</span>, configuración de usuario
+        y primeros pasos con <span class="cmd">ssh</span>.
+      </p>
+    </div>
+
+    <!-- NAV ENTRE SESIONES -->
+    <div class="session-nav">
+      <a class="nav-btn" href="index.html">← índice</a>
+      <a class="nav-btn next" href="sesion-02.html">session 02 →</a>
+    </div>
+
+  </main>
+
+  <footer>crafted by <span>JMiguelHz</span> · github pages · asciinema player</footer>
+
+  <script src="https://unpkg.com/asciinema-player@3.8.0/dist/bundle/asciinema-player.min.js"></script>
+  <script>
+    // Cursor
+    const cursor = document.getElementById('cursor');
+    const trail  = document.getElementById('cursorTrail');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      setTimeout(() => { trail.style.left = e.clientX + 'px'; trail.style.top = e.clientY + 'px'; }, 90);
+    });
+
+    // ── PLAYER ──
+    // Cambia la URL por la ruta raw de tu .cast en GitHub:
+    AsciinemaPlayer.create(
+      'https://raw.githubusercontent.com/Jmiguelhz/Prueba-de-txt/main/demo1.cast',
+      document.getElementById('player'),
+      { theme: 'monokai', speed: 1, fit: 'width', terminalFontSize: 'medium' }
+    );
+  </script>
+</body>
+</html>

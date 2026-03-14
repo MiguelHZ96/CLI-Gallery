@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JMiguelHz · Terminal Sessions</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-void:      #000000;
+      --bg-deep:      #0A0A0A;
+      --purple-abyss: #2D0A31;
+      --purple-dark:  #4A0E4E;
+      --purple-mid:   #6B21A8;
+      --purple-core:  #9333EA;
+      --purple-vivid: #A855F7;
+      --glow-soft:    #B026FF;
+      --glow-bright:  #D946EF;
+      --border-dim:   #4A4A4A;
+      --border-mid:   #6B6B6B;
+      --text-main:    #E5E5E5;
+      --text-white:   #FFFFFF;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{background:var(--bg-void);color:var(--text-main);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;cursor:none}
+    .cursor{position:fixed;width:10px;height:10px;background:var(--glow-bright);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);box-shadow:0 0 10px var(--glow-bright),0 0 25px var(--glow-soft)}
+    .cursor-trail{position:fixed;width:28px;height:28px;border:1px solid var(--purple-core);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);opacity:.45;transition:all .15s ease}
+    body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(147,51,234,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(147,51,234,.04) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0}
+    .scanline{position:fixed;top:0;left:0;right:0;height:2px;background:rgba(176,38,255,.12);animation:scan 10s linear infinite;pointer-events:none;z-index:5}
+    @keyframes scan{0%{top:-2px}100%{top:100vh}}
+
+    header{position:relative;z-index:10;text-align:center;padding:70px 20px 50px;background:linear-gradient(180deg,#2D0A31 0%,#0A0A0A 100%);overflow:hidden}
+    header::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:400px;background:radial-gradient(ellipse,rgba(176,38,255,.22) 0%,transparent 70%);pointer-events:none}
+    .header-tag{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--purple-vivid);letter-spacing:5px;text-transform:uppercase;margin-bottom:14px;opacity:0;animation:fadeUp .7s .1s forwards}
+    h1{font-family:'Orbitron',sans-serif;font-weight:900;font-size:clamp(2.2rem,6vw,4.5rem);color:var(--text-white);text-shadow:0 0 20px var(--glow-soft),0 0 60px rgba(176,38,255,.35);opacity:0;animation:fadeUp .7s .3s forwards}
+    h1 span{color:var(--glow-bright);text-shadow:0 0 10px var(--glow-bright),0 0 40px var(--glow-soft)}
+    .subtitle{margin-top:14px;font-family:'Share Tech Mono',monospace;font-size:.9rem;color:var(--border-mid);letter-spacing:2px;opacity:0;animation:fadeUp .7s .5s forwards}
+    .header-line{margin:30px auto 0;width:100px;height:2px;background:linear-gradient(90deg,transparent,var(--glow-bright),transparent);opacity:0;animation:fadeUp .7s .7s forwards}
+
+    main{position:relative;z-index:10;max-width:1100px;margin:0 auto;padding:60px 20px 100px}
+    .section-label{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--purple-core);letter-spacing:5px;text-transform:uppercase;margin-bottom:40px;display:flex;align-items:center;gap:16px}
+    .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--purple-dark),transparent)}
+
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
+
+    .session-card{background:linear-gradient(135deg,#1A1A1A 0%,#2D0A31 100%);border:1px solid var(--purple-dark);border-radius:4px;padding:28px 24px 24px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden;opacity:0;animation:fadeUp .6s forwards;transition:border-color .3s,transform .3s,box-shadow .3s}
+    .session-card:hover{border-color:var(--purple-core);transform:translateY(-4px);box-shadow:0 0 30px rgba(147,51,234,.25),0 0 60px rgba(176,38,255,.1)}
+    .session-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple-core),var(--glow-bright),transparent);opacity:0;transition:opacity .3s}
+    .session-card:hover::before{opacity:1}
+    .session-card::after{content:'';position:absolute;bottom:0;right:0;width:60px;height:60px;background:radial-gradient(circle at bottom right,rgba(176,38,255,.12),transparent 70%)}
+
+    .card-num{font-family:'Orbitron',sans-serif;font-size:.65rem;font-weight:700;color:var(--purple-core);letter-spacing:3px}
+    .card-icon{font-size:2rem;line-height:1}
+    .card-title-text{font-family:'Orbitron',sans-serif;font-weight:700;font-size:1rem;color:var(--text-white);letter-spacing:1px}
+    .card-desc-text{font-family:'Share Tech Mono',monospace;font-size:.78rem;color:var(--border-mid);line-height:1.6}
+    .card-desc-text::before{content:'> ';color:var(--purple-core)}
+    .card-footer{margin-top:auto;padding-top:14px;border-top:1px solid rgba(74,14,78,.5);display:flex;align-items:center;justify-content:space-between}
+    .card-tag{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--glow-bright);border:1px solid rgba(217,70,239,.3);padding:3px 10px;border-radius:2px;background:rgba(217,70,239,.05)}
+    .card-arrow{color:var(--purple-core);font-size:1.1rem;transition:transform .3s,color .3s}
+    .session-card:hover .card-arrow{transform:translateX(5px);color:var(--glow-bright)}
+
+    .session-card:nth-child(1){animation-delay:.15s}
+    .session-card:nth-child(2){animation-delay:.3s}
+    .session-card:nth-child(3){animation-delay:.45s}
+    .session-card:nth-child(4){animation-delay:.6s}
+    .session-card:nth-child(5){animation-delay:.75s}
+    .session-card:nth-child(6){animation-delay:.9s}
+
+    .add-card{border:1px dashed var(--purple-dark);border-radius:4px;padding:28px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;min-height:200px;opacity:.4;font-family:'Share Tech Mono',monospace;font-size:.75rem;color:var(--border-dim);letter-spacing:2px;text-align:center}
+    .add-card .plus{font-size:2rem;color:var(--purple-dark)}
+
+    footer{position:relative;z-index:10;text-align:center;padding:28px 20px;border-top:1px solid rgba(74,14,78,.35);font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--border-dim);letter-spacing:3px}
+    footer span{color:var(--purple-core)}
+
+    @keyframes fadeUp{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+  </style>
+</head>
+<body>
+  <div class="cursor" id="cursor"></div>
+  <div class="cursor-trail" id="cursorTrail"></div>
+  <div class="scanline"></div>
+
+  <header>
+    <p class="header-tag">// terminal.sessions.archive</p>
+    <h1>JMiguel<span>Hz</span></h1>
+    <p class="subtitle">_selecciona una sesión para reproducir_</p>
+    <div class="header-line"></div>
+  </header>
+
+  <main>
+    <p class="section-label">sessions_index</p>
+    <div class="grid">
+
+      <!-- ══ CARD 1 ══ -->
+      <a class="session-card" href="sesion-01.html">
+        <span class="card-num">SESSION · 01</span>
+        <span class="card-icon">🖥️</span>
+        <span class="card-title-text">Configuración inicial</span>
+        <span class="card-desc-text">Setup del servidor y primeras configuraciones en Ubuntu</span>
+        <div class="card-footer">
+          <span class="card-tag">apt · sudo · ssh</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- ══ CARD 2 ══ -->
+      <a class="session-card" href="sesion-02.html">
+        <span class="card-num">SESSION · 02</span>
+        <span class="card-icon">🔒</span>
+        <span class="card-title-text">Hardening SSH</span>
+        <span class="card-desc-text">Configuración de seguridad y acceso por llaves</span>
+        <div class="card-footer">
+          <span class="card-tag">ssh · ufw · keys</span>
+          <span class="card-arrow">→</span>
+        </div>
+      </a>
+
+      <!-- ══ PLACEHOLDER — duplica una card de arriba para agregar más ══ -->
+      <div class="add-card">
+        <span class="plus">+</span>
+        PRÓXIMA SESIÓN
+      </div>
+
+    </div>
+  </main>
+
+  <footer>crafted by <span>JMiguelHz</span> · github pages · asciinema player</footer>
+
+  <script>
+    const cursor = document.getElementById('cursor');
+    const trail  = document.getElementById('cursorTrail');
+    document.addEventListener('mousemove', e => {
+      cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px';
+      setTimeout(() => { trail.style.left = e.clientX + 'px'; trail.style.top = e.clientY + 'px'; }, 90);
+    });
+  </script>
+</body>
+</html>
